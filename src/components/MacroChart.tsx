@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 interface Props {
   protein: number;
@@ -7,16 +7,16 @@ interface Props {
 }
 
 const COLORS = [
-  "hsl(160, 84%, 39%)", // emerald/primary - protein
-  "hsl(38, 92%, 50%)",  // amber - fat
-  "hsl(199, 89%, 48%)", // sky - carbs
+  "hsl(160, 84%, 39%)",
+  "hsl(38, 92%, 50%)",
+  "hsl(199, 89%, 48%)",
 ];
 
 export function MacroChart({ protein, fat, carbs }: Props) {
   const data = [
-    { name: "Protein", value: protein },
-    { name: "Fat", value: fat },
-    { name: "Carbs", value: carbs },
+    { name: "Protein", value: protein, unit: "g" },
+    { name: "Fat", value: fat, unit: "g" },
+    { name: "Carbs", value: carbs, unit: "g" },
   ];
 
   return (
@@ -31,11 +31,21 @@ export function MacroChart({ protein, fat, carbs }: Props) {
           paddingAngle={4}
           dataKey="value"
           strokeWidth={0}
+          animationBegin={0}
+          animationDuration={800}
         >
           {data.map((_, index) => (
             <Cell key={index} fill={COLORS[index]} />
           ))}
         </Pie>
+        <Tooltip
+          formatter={(value: number, name: string) => [`${value}g`, name]}
+          contentStyle={{
+            borderRadius: "8px",
+            border: "1px solid hsl(150, 12%, 90%)",
+            fontSize: "12px",
+          }}
+        />
       </PieChart>
     </ResponsiveContainer>
   );
