@@ -65,6 +65,9 @@ export function CalculatorResults({ results }: Props) {
 
       {/* Tips */}
       <GoalTips goal={results.goal} targetCalories={results.targetCalories} protein={results.protein} />
+
+      {/* PDF Export */}
+      <PdfExportButton results={results} />
     </div>
   );
 }
