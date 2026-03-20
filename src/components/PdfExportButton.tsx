@@ -15,12 +15,12 @@ export function PdfExportButton({ results }: Props) {
     const contentW = W - margin * 2;
     let y = margin;
 
-    const emerald = [16, 185, 129] as const; // #10B981
-    const amber = [245, 158, 11] as const;
-    const sky = [14, 165, 233] as const;
-    const dark = [30, 41, 59] as const;
-    const muted = [100, 116, 139] as const;
-    const lightBg = [241, 245, 249] as const;
+    const emerald: [number, number, number] = [16, 185, 129];
+    const amber: [number, number, number] = [245, 158, 11];
+    const sky: [number, number, number] = [14, 165, 233];
+    const dark: [number, number, number] = [30, 41, 59];
+    const muted: [number, number, number] = [100, 116, 139];
+    const lightBg: [number, number, number] = [241, 245, 249];
 
     // --- Header bar ---
     doc.setFillColor(...emerald);
