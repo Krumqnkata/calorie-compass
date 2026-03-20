@@ -3,6 +3,7 @@ import { MacroChart } from "./MacroChart";
 import { MealBreakdown } from "./MealBreakdown";
 import { GoalTips } from "./GoalTips";
 import { AnimatedNumber } from "./AnimatedNumber";
+import { PdfExportButton } from "./PdfExportButton";
 import { Droplets, Heart, Target, Scale, Dumbbell, TrendingDown, TrendingUp } from "lucide-react";
 
 interface Props {
