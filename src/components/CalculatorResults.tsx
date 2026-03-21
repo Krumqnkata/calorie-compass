@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { Results } from "./CalorieCalculator";
 import { MacroChart } from "./MacroChart";
 import { MealBreakdown } from "./MealBreakdown";
 import { GoalTips } from "./GoalTips";
 import { AnimatedNumber } from "./AnimatedNumber";
 import { PdfExportButton } from "./PdfExportButton";
+import { MacroPresets, MacroSplit } from "./MacroPresets";
+import { SampleMealPlan } from "./SampleMealPlan";
 import { Droplets, Heart, Target, Scale, Dumbbell, TrendingDown, TrendingUp } from "lucide-react";
 
 interface Props {
@@ -11,8 +14,19 @@ interface Props {
 }
 
 export function CalculatorResults({ results }: Props) {
+  const [macros, setMacros] = useState({
+    split: { protein: 30, fat: 30, carbs: 40 } as MacroSplit,
+    protein: results.protein,
+    fat: results.fat,
+    carbs: results.carbs,
+  });
+
   const goalIcon = results.goal === "lose" ? <TrendingDown className="h-5 w-5" /> : results.goal === "build" ? <TrendingUp className="h-5 w-5" /> : <Target className="h-5 w-5" />;
   const goalLabel = results.goal === "lose" ? "Deficit" : results.goal === "build" ? "Surplus" : "Maintenance";
+
+  const handleSplitChange = (_split: MacroSplit, proteinG: number, fatG: number, carbsG: number) => {
+    setMacros({ split: _split, protein: proteinG, fat: fatG, carbs: carbsG });
+  };
 
   return (
     <div className="space-y-6">
@@ -34,23 +48,27 @@ export function CalculatorResults({ results }: Props) {
         )}
       </div>
 
-      {/* Macros */}
+      {/* Macros with presets */}
       <div className="rounded-2xl border bg-card p-6 sm:p-8 shadow-sm">
-        <h3 className="text-sm font-medium text-muted-foreground mb-6">Macronutrient Split</h3>
+        <h3 className="text-sm font-medium text-muted-foreground mb-4">Macronutrient Split</h3>
+        <MacroPresets targetCalories={results.targetCalories} onSplitChange={handleSplitChange} />
         <div className="flex flex-col sm:flex-row gap-8 items-center">
           <div className="w-48 h-48 flex-shrink-0">
-            <MacroChart protein={results.protein} fat={results.fat} carbs={results.carbs} />
+            <MacroChart protein={macros.protein} fat={macros.fat} carbs={macros.carbs} />
           </div>
           <div className="flex-1 w-full space-y-5">
-            <MacroRow label="Protein" grams={results.protein} percent={30} color="bg-primary" barBg="bg-emerald-light" cals={results.protein * 4} />
-            <MacroRow label="Fat" grams={results.fat} percent={30} color="bg-amber" barBg="bg-amber-light" cals={results.fat * 9} />
-            <MacroRow label="Carbs" grams={results.carbs} percent={40} color="bg-sky" barBg="bg-sky-light" cals={results.carbs * 4} />
+            <MacroRow label="Protein" grams={macros.protein} percent={macros.split.protein} color="bg-primary" barBg="bg-emerald-light" cals={macros.protein * 4} />
+            <MacroRow label="Fat" grams={macros.fat} percent={macros.split.fat} color="bg-amber" barBg="bg-amber-light" cals={macros.fat * 9} />
+            <MacroRow label="Carbs" grams={macros.carbs} percent={macros.split.carbs} color="bg-sky" barBg="bg-sky-light" cals={macros.carbs * 4} />
           </div>
         </div>
       </div>
 
       {/* Meal Breakdown */}
-      <MealBreakdown targetCalories={results.targetCalories} protein={results.protein} fat={results.fat} carbs={results.carbs} />
+      <MealBreakdown targetCalories={results.targetCalories} protein={macros.protein} fat={macros.fat} carbs={macros.carbs} />
+
+      {/* Sample Meal Plan */}
+      <SampleMealPlan targetCalories={results.targetCalories} protein={macros.protein} fat={macros.fat} carbs={macros.carbs} />
 
       {/* Secondary Metrics Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -64,7 +82,7 @@ export function CalculatorResults({ results }: Props) {
       <BmiBar bmi={results.bmi} />
 
       {/* Tips */}
-      <GoalTips goal={results.goal} targetCalories={results.targetCalories} protein={results.protein} />
+      <GoalTips goal={results.goal} targetCalories={results.targetCalories} protein={macros.protein} />
 
       {/* PDF Export */}
       <PdfExportButton results={results} />
@@ -119,7 +137,6 @@ function MetricCard({ icon, label, value, unit }: { icon: React.ReactNode; label
 }
 
 function BmiBar({ bmi }: { bmi: number }) {
-  // BMI scale: 15 to 40
   const position = Math.min(Math.max(((bmi - 15) / 25) * 100, 0), 100);
   const segments = [
     { label: "Underweight", range: "< 18.5", width: "14%", color: "bg-sky" },

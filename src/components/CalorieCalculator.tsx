@@ -3,6 +3,9 @@ import { CalculatorForm } from "./CalculatorForm";
 import { CalculatorResults } from "./CalculatorResults";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { ResultsHistory } from "./ResultsHistory";
+import { BodyFatCalculator } from "./BodyFatCalculator";
+import { WaterTracker } from "./WaterTracker";
+import { FastingTimer } from "./FastingTimer";
 
 export type Gender = "male" | "female";
 export type Goal = "lose" | "maintain" | "build";
@@ -62,9 +65,8 @@ export function CalorieCalculator() {
     const age = parseInt(data.age);
     const multiplier = parseFloat(data.activityLevel);
 
-    // Convert imperial to metric
     if (data.unitSystem === "imperial") {
-      weightKg = weightKg * 0.453592; // lbs to kg
+      weightKg = weightKg * 0.453592;
       const feet = parseFloat(data.heightFeet) || 0;
       const inches = parseFloat(data.heightInches) || 0;
       heightCm = (feet * 12 + inches) * 2.54;
@@ -76,24 +78,14 @@ export function CalorieCalculator() {
         : 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
 
     const tdee = bmr * multiplier;
-
     const targetCalories =
-      data.goal === "lose"
-        ? tdee - 500
-        : data.goal === "build"
-        ? tdee + 500
-        : tdee;
+      data.goal === "lose" ? tdee - 500 : data.goal === "build" ? tdee + 500 : tdee;
 
     const bmi = weightKg / ((heightCm / 100) ** 2);
-
     const protein = (targetCalories * 0.3) / 4;
     const fat = (targetCalories * 0.3) / 9;
     const carbs = (targetCalories * 0.4) / 4;
-
-    // Water intake: ~35ml per kg body weight
     const waterLiters = Math.round((weightKg * 35) / 100) / 10;
-
-    // Ideal weight (BMI 18.5–24.9)
     const heightM = heightCm / 100;
     const idealWeightLow = Math.round(18.5 * heightM * heightM);
     const idealWeightHigh = Math.round(24.9 * heightM * heightM);
@@ -117,12 +109,10 @@ export function CalorieCalculator() {
     setResults(newResults);
     setShowResults(true);
 
-    // Save to history (max 10)
     const newHistory = [newResults, ...history].slice(0, 10);
     setHistory(newHistory);
     saveHistory(newHistory);
 
-    // Smooth scroll to results
     setTimeout(() => {
       resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
@@ -165,6 +155,22 @@ export function CalorieCalculator() {
             <ResultsHistory history={history} onClear={clearHistory} />
           </div>
         )}
+
+        {/* Health & Fitness Tools */}
+        <div className="mt-12 space-y-6">
+          <h2 className="text-lg font-semibold text-foreground text-center">Health & Fitness Tools</h2>
+
+          <BodyFatCalculator />
+
+          {results && (
+            <WaterTracker goalLiters={results.waterLiters} />
+          )}
+          {!results && (
+            <WaterTracker goalLiters={2.5} />
+          )}
+
+          <FastingTimer />
+        </div>
       </div>
     </div>
   );
