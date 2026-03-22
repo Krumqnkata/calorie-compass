@@ -25,8 +25,7 @@ export function DarkModeToggle() {
   return (
     <button
       onClick={toggle}
-      className="fixed top-4 right-4 z-50 rounded-full border bg-card p-2.5 shadow-sm transition-all
-                 hover:shadow-md active:scale-95"
+      className="rounded-full border bg-card p-2 shadow-sm transition-all hover:shadow-md active:scale-95"
       aria-label="Toggle dark mode"
     >
       {dark ? <Sun className="h-4 w-4 text-foreground" /> : <Moon className="h-4 w-4 text-foreground" />}

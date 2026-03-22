@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface MacroSplit {
   protein: number;
@@ -6,20 +7,21 @@ export interface MacroSplit {
   carbs: number;
 }
 
-const presets: { id: string; label: string; split: MacroSplit }[] = [
-  { id: "balanced", label: "Balanced", split: { protein: 30, fat: 30, carbs: 40 } },
-  { id: "lowcarb", label: "Low Carb", split: { protein: 40, fat: 40, carbs: 20 } },
-  { id: "keto", label: "Keto", split: { protein: 20, fat: 75, carbs: 5 } },
-  { id: "highprotein", label: "High Protein", split: { protein: 40, fat: 30, carbs: 30 } },
-];
-
 interface Props {
   targetCalories: number;
   onSplitChange: (split: MacroSplit, proteinG: number, fatG: number, carbsG: number) => void;
 }
 
 export function MacroPresets({ targetCalories, onSplitChange }: Props) {
+  const { t } = useTranslation();
   const [active, setActive] = useState("balanced");
+
+  const presets: { id: string; labelKey: string; split: MacroSplit }[] = [
+    { id: "balanced", labelKey: "macroPresets.balanced", split: { protein: 30, fat: 30, carbs: 40 } },
+    { id: "lowcarb", labelKey: "macroPresets.lowCarb", split: { protein: 40, fat: 40, carbs: 20 } },
+    { id: "keto", labelKey: "macroPresets.keto", split: { protein: 20, fat: 75, carbs: 5 } },
+    { id: "highprotein", labelKey: "macroPresets.highProtein", split: { protein: 40, fat: 30, carbs: 30 } },
+  ];
 
   useEffect(() => {
     const preset = presets.find((p) => p.id === active);
@@ -35,7 +37,7 @@ export function MacroPresets({ targetCalories, onSplitChange }: Props) {
 
   return (
     <div className="mb-5">
-      <p className="text-xs font-medium text-muted-foreground mb-2">Diet Preset</p>
+      <p className="text-xs font-medium text-muted-foreground mb-2">{t("macroPresets.dietPreset")}</p>
       <div className="flex flex-wrap gap-2">
         {presets.map((p) => (
           <button
@@ -47,7 +49,7 @@ export function MacroPresets({ targetCalories, onSplitChange }: Props) {
                 : "border border-input bg-background text-foreground hover:border-muted-foreground/30"
               }`}
           >
-            {p.label}
+            {t(p.labelKey)}
             <span className="ml-1 opacity-60">
               {p.split.protein}/{p.split.fat}/{p.split.carbs}
             </span>

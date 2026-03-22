@@ -1,13 +1,15 @@
 import { Results } from "./CalorieCalculator";
 import { FileDown } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   results: Results;
 }
 
 export function PdfExportButton({ results }: Props) {
+  const { t } = useTranslation();
+
   const handleExport = async () => {
-    // Dynamic import to keep bundle lean
     const { jsPDF } = await import("jspdf");
     const doc = new jsPDF({ unit: "mm", format: "a4" });
     const W = 210;
@@ -22,7 +24,6 @@ export function PdfExportButton({ results }: Props) {
     const muted: [number, number, number] = [100, 116, 139];
     const lightBg: [number, number, number] = [241, 245, 249];
 
-    // --- Header bar ---
     doc.setFillColor(...emerald);
     doc.roundedRect(margin, y, contentW, 14, 3, 3, "F");
     doc.setFont("helvetica", "bold");
@@ -34,7 +35,6 @@ export function PdfExportButton({ results }: Props) {
     doc.text(new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }), W - margin - 6, y + 9, { align: "right" });
     y += 22;
 
-    // --- Target Calories hero ---
     doc.setFillColor(...lightBg);
     doc.roundedRect(margin, y, contentW, 32, 3, 3, "F");
     doc.setTextColor(...muted);
@@ -51,7 +51,6 @@ export function PdfExportButton({ results }: Props) {
     doc.text("kcal / day", W / 2, y + 30, { align: "center" });
     y += 40;
 
-    // --- Macronutrient Section ---
     doc.setTextColor(...dark);
     doc.setFontSize(11);
     doc.setFont("helvetica", "bold");
@@ -65,7 +64,6 @@ export function PdfExportButton({ results }: Props) {
     ];
 
     for (const macro of macros) {
-      // Label row
       doc.setFontSize(9);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(...dark);
@@ -73,12 +71,9 @@ export function PdfExportButton({ results }: Props) {
       doc.setFont("helvetica", "normal");
       doc.setTextColor(...muted);
       doc.text(`${macro.grams}g · ${Math.round(macro.cals)} kcal (${macro.percent}%)`, W - margin, y + 4, { align: "right" });
-
-      // Bar background
       y += 7;
       doc.setFillColor(230, 230, 230);
       doc.roundedRect(margin, y, contentW, 4, 2, 2, "F");
-      // Bar fill
       doc.setFillColor(...macro.color);
       const barW = (contentW * macro.percent) / 100;
       doc.roundedRect(margin, y, barW, 4, 2, 2, "F");
@@ -87,7 +82,6 @@ export function PdfExportButton({ results }: Props) {
 
     y += 4;
 
-    // --- Metrics Grid ---
     doc.setTextColor(...dark);
     doc.setFontSize(11);
     doc.setFont("helvetica", "bold");
@@ -108,7 +102,6 @@ export function PdfExportButton({ results }: Props) {
       const col = i % 2;
       const x = margin + col * (colW + 4);
       if (col === 0 && i > 0) y += 16;
-
       doc.setFillColor(...lightBg);
       doc.roundedRect(x, y, colW, 14, 2, 2, "F");
       doc.setFontSize(7);
@@ -123,10 +116,8 @@ export function PdfExportButton({ results }: Props) {
 
     if (metrics.length % 2 !== 0) y += 16;
     else y += 16;
-
     y += 6;
 
-    // --- Meal Plan ---
     doc.setTextColor(...dark);
     doc.setFontSize(11);
     doc.setFont("helvetica", "bold");
@@ -166,7 +157,6 @@ export function PdfExportButton({ results }: Props) {
 
     y += 30;
 
-    // --- Footer ---
     doc.setDrawColor(220, 220, 220);
     doc.line(margin, y, W - margin, y);
     y += 5;
@@ -185,7 +175,7 @@ export function PdfExportButton({ results }: Props) {
                  transition-all hover:bg-accent active:scale-[0.98] flex items-center justify-center gap-2"
     >
       <FileDown className="h-4 w-4" />
-      Download PDF Report
+      {t("results.downloadPdf")}
     </button>
   );
 }

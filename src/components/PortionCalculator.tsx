@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Calculator } from "lucide-react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { useTranslation } from "react-i18next";
 
 export function PortionCalculator() {
+  const { t } = useTranslation();
   const [base, setBase] = useState({ weight: "100", calories: "", protein: "", fat: "", carbs: "" });
   const [portion, setPortion] = useState("");
 
@@ -25,29 +27,25 @@ export function PortionCalculator() {
     <div className="rounded-2xl border bg-card p-6 shadow-sm">
       <div className="flex items-center gap-2 mb-5">
         <Calculator className="h-5 w-5 text-primary" />
-        <h3 className="font-semibold text-foreground">Portion Macro Calculator</h3>
+        <h3 className="font-semibold text-foreground">{t("portionCalc.title")}</h3>
       </div>
 
-      <p className="text-xs text-muted-foreground mb-4">
-        Enter the nutritional info from any food label, then type your portion size to see exact macros.
-      </p>
+      <p className="text-xs text-muted-foreground mb-4">{t("portionCalc.description")}</p>
 
-      {/* Base label inputs */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5">
-        <Field label="Base Weight (g)" value={base.weight} onChange={(v) => setBase({ ...base, weight: v })} />
-        <Field label="Calories" value={base.calories} onChange={(v) => setBase({ ...base, calories: v })} placeholder="kcal" />
-        <Field label="Protein (g)" value={base.protein} onChange={(v) => setBase({ ...base, protein: v })} />
-        <Field label="Fats (g)" value={base.fat} onChange={(v) => setBase({ ...base, fat: v })} />
-        <Field label="Carbs (g)" value={base.carbs} onChange={(v) => setBase({ ...base, carbs: v })} />
-        <Field label="Your Portion (g)" value={portion} onChange={setPortion} highlight />
+        <Field label={t("portionCalc.baseWeight")} value={base.weight} onChange={(v) => setBase({ ...base, weight: v })} />
+        <Field label={t("portionCalc.calories")} value={base.calories} onChange={(v) => setBase({ ...base, calories: v })} placeholder="kcal" />
+        <Field label={t("portionCalc.protein")} value={base.protein} onChange={(v) => setBase({ ...base, protein: v })} />
+        <Field label={t("portionCalc.fats")} value={base.fat} onChange={(v) => setBase({ ...base, fat: v })} />
+        <Field label={t("portionCalc.carbs")} value={base.carbs} onChange={(v) => setBase({ ...base, carbs: v })} />
+        <Field label={t("portionCalc.yourPortion")} value={portion} onChange={setPortion} highlight />
       </div>
 
-      {/* Live results */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <ResultCard label="Calories" value={results.calories} unit="kcal" />
-        <ResultCard label="Protein" value={results.protein} unit="g" />
-        <ResultCard label="Fats" value={results.fat} unit="g" />
-        <ResultCard label="Carbs" value={results.carbs} unit="g" />
+        <ResultCard label={t("portionCalc.calories")} value={results.calories} unit="kcal" />
+        <ResultCard label={t("results.protein")} value={results.protein} unit="g" />
+        <ResultCard label={t("portionCalc.fats")} value={results.fat} unit="g" />
+        <ResultCard label={t("portionCalc.carbs")} value={results.carbs} unit="g" />
       </div>
     </div>
   );
