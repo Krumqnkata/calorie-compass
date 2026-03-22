@@ -171,6 +171,8 @@ export function CalorieCalculator() {
           )}
 
           <FastingTimer />
+
+          <PortionCalculator />
         </div>
       </div>
     </div>
