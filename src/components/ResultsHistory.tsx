@@ -1,6 +1,7 @@
 import { Results } from "./CalorieCalculator";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { History, Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   history: Results[];
@@ -8,6 +9,8 @@ interface Props {
 }
 
 export function ResultsHistory({ history, onClear }: Props) {
+  const { t } = useTranslation();
+
   const data = [...history].reverse().map((r, i) => ({
     name: new Date(r.timestamp).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
     calories: r.targetCalories,
@@ -19,13 +22,13 @@ export function ResultsHistory({ history, onClear }: Props) {
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
           <History className="h-4 w-4 text-muted-foreground" />
-          <h3 className="text-sm font-medium text-muted-foreground">Calculation History</h3>
+          <h3 className="text-sm font-medium text-muted-foreground">{t("history.title")}</h3>
         </div>
         <button
           onClick={onClear}
           className="text-xs text-muted-foreground hover:text-destructive transition-colors flex items-center gap-1"
         >
-          <Trash2 className="h-3 w-3" /> Clear
+          <Trash2 className="h-3 w-3" /> {t("history.clear")}
         </button>
       </div>
       <div className="h-40">

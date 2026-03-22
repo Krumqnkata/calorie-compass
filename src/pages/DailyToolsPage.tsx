@@ -1,15 +1,17 @@
+import { useTranslation } from "react-i18next";
 import { WaterTracker } from "@/components/WaterTracker";
 import { FastingTimer } from "@/components/FastingTimer";
 
 export default function DailyToolsPage() {
+  const { t } = useTranslation();
   return (
     <div className="max-w-2xl mx-auto py-8 px-4 sm:py-16">
       <header className="text-center mb-10">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
-          Daily Health Tools
+          {t("dailyTools.pageTitle")}
         </h1>
         <p className="mt-3 text-muted-foreground max-w-md mx-auto">
-          Track your hydration and manage intermittent fasting — all offline.
+          {t("dailyTools.pageSubtitle")}
         </p>
       </header>
       <div className="space-y-6">

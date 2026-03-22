@@ -8,12 +8,14 @@ import { PdfExportButton } from "./PdfExportButton";
 import { MacroPresets, MacroSplit } from "./MacroPresets";
 import { SampleMealPlan } from "./SampleMealPlan";
 import { Droplets, Heart, Target, Scale, Dumbbell, TrendingDown, TrendingUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   results: Results;
 }
 
 export function CalculatorResults({ results }: Props) {
+  const { t } = useTranslation();
   const [macros, setMacros] = useState({
     split: { protein: 30, fat: 30, carbs: 40 } as MacroSplit,
     protein: results.protein,
@@ -22,10 +24,17 @@ export function CalculatorResults({ results }: Props) {
   });
 
   const goalIcon = results.goal === "lose" ? <TrendingDown className="h-5 w-5" /> : results.goal === "build" ? <TrendingUp className="h-5 w-5" /> : <Target className="h-5 w-5" />;
-  const goalLabel = results.goal === "lose" ? "Deficit" : results.goal === "build" ? "Surplus" : "Maintenance";
+  const goalLabel = results.goal === "lose" ? t("results.deficit") : results.goal === "build" ? t("results.surplus") : t("results.maintenance");
 
   const handleSplitChange = (_split: MacroSplit, proteinG: number, fatG: number, carbsG: number) => {
     setMacros({ split: _split, protein: proteinG, fat: fatG, carbs: carbsG });
+  };
+
+  const bmiCategory = (bmi: number): string => {
+    if (bmi < 18.5) return t("results.underweight");
+    if (bmi < 25) return t("results.normal");
+    if (bmi < 30) return t("results.overweight");
+    return t("results.obese");
   };
 
   return (
@@ -36,11 +45,11 @@ export function CalculatorResults({ results }: Props) {
           {goalIcon}
           {goalLabel}
         </div>
-        <p className="text-sm font-medium text-muted-foreground mb-1">Target Daily Calories</p>
+        <p className="text-sm font-medium text-muted-foreground mb-1">{t("results.targetDaily")}</p>
         <p className="text-5xl sm:text-6xl font-bold tracking-tight text-foreground tabular-nums">
           <AnimatedNumber value={results.targetCalories} />
         </p>
-        <p className="text-sm text-muted-foreground mt-1">kcal / day</p>
+        <p className="text-sm text-muted-foreground mt-1">{t("results.kcalDay")}</p>
         {results.goal !== "maintain" && (
           <p className="text-xs text-muted-foreground mt-2">
             TDEE: {results.tdee.toLocaleString()} kcal {results.goal === "lose" ? "− 500" : "+ 500"}
@@ -50,16 +59,16 @@ export function CalculatorResults({ results }: Props) {
 
       {/* Macros with presets */}
       <div className="rounded-2xl border bg-card p-6 sm:p-8 shadow-sm">
-        <h3 className="text-sm font-medium text-muted-foreground mb-4">Macronutrient Split</h3>
+        <h3 className="text-sm font-medium text-muted-foreground mb-4">{t("results.macroSplit")}</h3>
         <MacroPresets targetCalories={results.targetCalories} onSplitChange={handleSplitChange} />
         <div className="flex flex-col sm:flex-row gap-8 items-center">
           <div className="w-48 h-48 flex-shrink-0">
             <MacroChart protein={macros.protein} fat={macros.fat} carbs={macros.carbs} />
           </div>
           <div className="flex-1 w-full space-y-5">
-            <MacroRow label="Protein" grams={macros.protein} percent={macros.split.protein} color="bg-primary" barBg="bg-emerald-light" cals={macros.protein * 4} />
-            <MacroRow label="Fat" grams={macros.fat} percent={macros.split.fat} color="bg-amber" barBg="bg-amber-light" cals={macros.fat * 9} />
-            <MacroRow label="Carbs" grams={macros.carbs} percent={macros.split.carbs} color="bg-sky" barBg="bg-sky-light" cals={macros.carbs * 4} />
+            <MacroRow label={t("results.protein")} grams={macros.protein} percent={macros.split.protein} color="bg-primary" barBg="bg-emerald-light" cals={macros.protein * 4} />
+            <MacroRow label={t("results.fat")} grams={macros.fat} percent={macros.split.fat} color="bg-amber" barBg="bg-amber-light" cals={macros.fat * 9} />
+            <MacroRow label={t("results.carbs")} grams={macros.carbs} percent={macros.split.carbs} color="bg-sky" barBg="bg-sky-light" cals={macros.carbs * 4} />
           </div>
         </div>
       </div>
@@ -72,10 +81,10 @@ export function CalculatorResults({ results }: Props) {
 
       {/* Secondary Metrics Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <MetricCard icon={<Heart className="h-4 w-4 text-primary" />} label="BMR" value={results.bmr.toLocaleString()} unit="kcal" />
-        <MetricCard icon={<Scale className="h-4 w-4 text-amber" />} label="BMI" value={`${results.bmi}`} unit={bmiCategory(results.bmi)} />
-        <MetricCard icon={<Droplets className="h-4 w-4 text-sky" />} label="Water" value={`${results.waterLiters}`} unit="liters / day" />
-        <MetricCard icon={<Dumbbell className="h-4 w-4 text-primary" />} label="Ideal Weight" value={`${results.idealWeightLow}–${results.idealWeightHigh}`} unit="kg" />
+        <MetricCard icon={<Heart className="h-4 w-4 text-primary" />} label={t("results.bmr")} value={results.bmr.toLocaleString()} unit={t("common.kcal")} />
+        <MetricCard icon={<Scale className="h-4 w-4 text-amber" />} label={t("results.bmi")} value={`${results.bmi}`} unit={bmiCategory(results.bmi)} />
+        <MetricCard icon={<Droplets className="h-4 w-4 text-sky" />} label={t("results.water")} value={`${results.waterLiters}`} unit={t("results.litersDay")} />
+        <MetricCard icon={<Dumbbell className="h-4 w-4 text-primary" />} label={t("results.idealWeight")} value={`${results.idealWeightLow}–${results.idealWeightHigh}`} unit={t("common.kg")} />
       </div>
 
       {/* BMI Visual Bar */}
@@ -90,20 +99,8 @@ export function CalculatorResults({ results }: Props) {
   );
 }
 
-function MacroRow({
-  label,
-  grams,
-  percent,
-  color,
-  barBg,
-  cals,
-}: {
-  label: string;
-  grams: number;
-  percent: number;
-  color: string;
-  barBg: string;
-  cals: number;
+function MacroRow({ label, grams, percent, color, barBg, cals }: {
+  label: string; grams: number; percent: number; color: string; barBg: string; cals: number;
 }) {
   return (
     <div>
@@ -114,10 +111,7 @@ function MacroRow({
         </span>
       </div>
       <div className={`h-2.5 rounded-full ${barBg}`}>
-        <div
-          className={`h-full rounded-full ${color} transition-all duration-700 ease-out`}
-          style={{ width: `${percent}%` }}
-        />
+        <div className={`h-full rounded-full ${color} transition-all duration-700 ease-out`} style={{ width: `${percent}%` }} />
       </div>
     </div>
   );
@@ -137,18 +131,19 @@ function MetricCard({ icon, label, value, unit }: { icon: React.ReactNode; label
 }
 
 function BmiBar({ bmi }: { bmi: number }) {
+  const { t } = useTranslation();
   const position = Math.min(Math.max(((bmi - 15) / 25) * 100, 0), 100);
   const segments = [
-    { label: "Underweight", range: "< 18.5", width: "14%", color: "bg-sky" },
-    { label: "Normal", range: "18.5–24.9", width: "26%", color: "bg-primary" },
-    { label: "Overweight", range: "25–29.9", width: "20%", color: "bg-amber" },
-    { label: "Obese", range: "30+", width: "40%", color: "bg-destructive" },
+    { label: t("results.underweight"), range: "< 18.5", width: "14%", color: "bg-sky" },
+    { label: t("results.normal"), range: "18.5–24.9", width: "26%", color: "bg-primary" },
+    { label: t("results.overweight"), range: "25–29.9", width: "20%", color: "bg-amber" },
+    { label: t("results.obese"), range: "30+", width: "40%", color: "bg-destructive" },
   ];
 
   return (
     <div className="rounded-2xl border bg-card p-6 shadow-sm">
       <div className="flex justify-between items-baseline mb-3">
-        <h3 className="text-sm font-medium text-muted-foreground">BMI Scale</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">{t("results.bmiScale")}</h3>
         <span className="text-sm font-bold tabular-nums text-foreground">{bmi}</span>
       </div>
       <div className="relative">
@@ -169,11 +164,4 @@ function BmiBar({ bmi }: { bmi: number }) {
       </div>
     </div>
   );
-}
-
-function bmiCategory(bmi: number): string {
-  if (bmi < 18.5) return "Underweight";
-  if (bmi < 25) return "Normal";
-  if (bmi < 30) return "Overweight";
-  return "Obese";
 }

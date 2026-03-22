@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { CalculatorForm } from "./CalculatorForm";
 import { CalculatorResults } from "./CalculatorResults";
 import { ResultsHistory } from "./ResultsHistory";
+import { useTranslation } from "react-i18next";
 
 export type Gender = "male" | "female";
 export type Goal = "lose" | "maintain" | "build";
@@ -54,6 +55,7 @@ export function CalorieCalculator() {
   const [showResults, setShowResults] = useState(false);
   const [history, setHistory] = useState<Results[]>(loadHistory);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   const calculate = (data: FormData) => {
     let weightKg = parseFloat(data.weight);
@@ -125,15 +127,15 @@ export function CalorieCalculator() {
         <header className="text-center mb-10">
           <div className="inline-flex items-center gap-2 rounded-full bg-emerald-light px-4 py-1.5 text-sm font-medium text-primary mb-4">
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            Calorie & TDEE Calculator
+            {t("home.badge")}
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground text-balance leading-[1.1]">
-            Know your numbers,
+            {t("home.title1")}
             <br />
-            fuel your goals
+            {t("home.title2")}
           </h1>
           <p className="mt-3 text-muted-foreground max-w-md mx-auto">
-            Calculate your daily calorie needs, macros, water intake, and more — personalized to your body and lifestyle.
+            {t("home.subtitle")}
           </p>
         </header>
 

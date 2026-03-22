@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Timer, Play, Square } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const FASTING_WINDOWS = [
   { label: "12:12", hours: 12 },
@@ -29,6 +30,7 @@ function saveState(state: FastState) {
 }
 
 export function FastingTimer() {
+  const { t } = useTranslation();
   const [state, setState] = useState<FastState>(loadState);
   const [now, setNow] = useState(Date.now());
 
@@ -43,10 +45,7 @@ export function FastingTimer() {
     saveState(s);
   }, []);
 
-  const startFast = () => {
-    update({ ...state, startTime: Date.now() });
-    setNow(Date.now());
-  };
+  const startFast = () => { update({ ...state, startTime: Date.now() }); setNow(Date.now()); };
   const stopFast = () => update({ ...state, startTime: null });
   const setWindow = (h: number) => update({ ...state, durationHours: h, startTime: null });
 
@@ -64,7 +63,6 @@ export function FastingTimer() {
     return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
-  // Circular progress
   const size = 200;
   const stroke = 10;
   const radius = (size - stroke) / 2;
@@ -75,13 +73,12 @@ export function FastingTimer() {
     <div className="rounded-2xl border bg-card p-6 sm:p-8 shadow-sm">
       <div className="flex items-center gap-2 mb-5">
         <Timer className="h-5 w-5 text-primary" />
-        <h3 className="text-sm font-medium text-muted-foreground">Intermittent Fasting Timer</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">{t("fastingTimer.title")}</h3>
       </div>
 
-      {/* Window selection */}
       {!state.startTime && (
         <div className="mb-6">
-          <p className="text-xs text-muted-foreground mb-2">Select fasting window</p>
+          <p className="text-xs text-muted-foreground mb-2">{t("fastingTimer.selectWindow")}</p>
           <div className="flex flex-wrap gap-2">
             {FASTING_WINDOWS.map((w) => (
               <button
@@ -100,29 +97,15 @@ export function FastingTimer() {
         </div>
       )}
 
-      {/* Circular progress */}
       <div className="flex flex-col items-center">
         <div className="relative" style={{ width: size, height: size }}>
           <svg width={size} height={size} className="-rotate-90">
+            <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="hsl(var(--muted))" strokeWidth={stroke} />
             <circle
-              cx={size / 2}
-              cy={size / 2}
-              r={radius}
-              fill="none"
-              stroke="hsl(var(--muted))"
-              strokeWidth={stroke}
-            />
-            <circle
-              cx={size / 2}
-              cy={size / 2}
-              r={radius}
-              fill="none"
-              stroke={completed ? "hsl(var(--primary))" : "hsl(var(--primary))"}
-              strokeWidth={stroke}
-              strokeDasharray={circumference}
-              strokeDashoffset={dashOffset}
-              strokeLinecap="round"
-              className="transition-all duration-1000 ease-out"
+              cx={size / 2} cy={size / 2} r={radius} fill="none"
+              stroke="hsl(var(--primary))" strokeWidth={stroke}
+              strokeDasharray={circumference} strokeDashoffset={dashOffset}
+              strokeLinecap="round" className="transition-all duration-1000 ease-out"
               style={{ opacity: state.startTime ? 1 : 0.2 }}
             />
           </svg>
@@ -130,25 +113,24 @@ export function FastingTimer() {
             {state.startTime ? (
               <>
                 <span className="text-[10px] text-muted-foreground mb-0.5">
-                  {completed ? "Completed!" : "Remaining"}
+                  {completed ? t("fastingTimer.completed") : t("fastingTimer.remaining")}
                 </span>
                 <span className="text-2xl font-bold tabular-nums text-foreground">
                   {completed ? "🎉" : formatTime(remainingMs)}
                 </span>
                 <span className="text-[10px] text-muted-foreground mt-1">
-                  Elapsed: {formatTime(elapsedMs)}
+                  {t("fastingTimer.elapsed")}: {formatTime(elapsedMs)}
                 </span>
               </>
             ) : (
               <>
                 <span className="text-3xl font-bold text-foreground">{state.durationHours}h</span>
-                <span className="text-xs text-muted-foreground">fasting window</span>
+                <span className="text-xs text-muted-foreground">{t("fastingTimer.fastingWindow")}</span>
               </>
             )}
           </div>
         </div>
 
-        {/* Start / Stop */}
         <button
           onClick={state.startTime ? stopFast : startFast}
           className={`mt-5 flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold transition-all active:scale-[0.97] shadow-sm
@@ -158,16 +140,16 @@ export function FastingTimer() {
             }`}
         >
           {state.startTime ? (
-            <><Square className="h-4 w-4" /> End Fast</>
+            <><Square className="h-4 w-4" /> {t("fastingTimer.endFast")}</>
           ) : (
-            <><Play className="h-4 w-4" /> Start Fast</>
+            <><Play className="h-4 w-4" /> {t("fastingTimer.startFast")}</>
           )}
         </button>
 
         {state.startTime && (
           <p className="text-[10px] text-muted-foreground mt-3">
-            Started {new Date(state.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-            {" · "}Ends {new Date(state.startTime + totalMs).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            {t("fastingTimer.started")} {new Date(state.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            {" · "}{t("fastingTimer.ends")} {new Date(state.startTime + totalMs).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           </p>
         )}
       </div>

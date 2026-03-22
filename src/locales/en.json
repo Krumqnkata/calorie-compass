@@ -1,0 +1,181 @@
+{
+  "nav": {
+    "brand": "CalTrack",
+    "tdee": "TDEE Calculator",
+    "portion": "Portion Calculator",
+    "bodyFat": "Body Fat",
+    "dailyTools": "Daily Tools",
+    "mealPlan": "Meal Plan"
+  },
+  "home": {
+    "badge": "Calorie & TDEE Calculator",
+    "title1": "Know your numbers,",
+    "title2": "fuel your goals",
+    "subtitle": "Calculate your daily calorie needs, macros, water intake, and more — personalized to your body and lifestyle."
+  },
+  "form": {
+    "unitSystem": "Unit System",
+    "metric": "🌍 Metric (kg/cm)",
+    "imperial": "🇺🇸 Imperial (lbs/ft)",
+    "gender": "Gender",
+    "male": "♂ Male",
+    "female": "♀ Female",
+    "age": "Age",
+    "weight": "Weight",
+    "height": "Height",
+    "heightCm": "Height (cm)",
+    "bodyFatOptional": "Body Fat %",
+    "optional": "(optional)",
+    "leanMass": "Lean mass ≈",
+    "goal": "Goal",
+    "loseWeight": "Lose Weight",
+    "maintain": "Maintain",
+    "buildMuscle": "Build Muscle",
+    "activityLevel": "Activity Level",
+    "sedentary": "Sedentary",
+    "sedentaryDesc": "Little or no exercise",
+    "lightlyActive": "Lightly active",
+    "lightlyActiveDesc": "Light exercise 1-3 days/week",
+    "moderatelyActive": "Moderately active",
+    "moderatelyActiveDesc": "Moderate exercise 3-5 days/week",
+    "veryActive": "Very active",
+    "veryActiveDesc": "Hard exercise 6-7 days/week",
+    "extraActive": "Extra active",
+    "extraActiveDesc": "Very hard physical job / training 2×/day",
+    "calculate": "Calculate Macros & Calories",
+    "required": "Required"
+  },
+  "results": {
+    "targetDaily": "Target Daily Calories",
+    "kcalDay": "kcal / day",
+    "deficit": "Deficit",
+    "surplus": "Surplus",
+    "maintenance": "Maintenance",
+    "macroSplit": "Macronutrient Split",
+    "protein": "Protein",
+    "fat": "Fat",
+    "carbs": "Carbs",
+    "bmr": "BMR",
+    "bmi": "BMI",
+    "water": "Water",
+    "litersDay": "liters / day",
+    "idealWeight": "Ideal Weight",
+    "bmiScale": "BMI Scale",
+    "underweight": "Underweight",
+    "normal": "Normal",
+    "overweight": "Overweight",
+    "obese": "Obese",
+    "downloadPdf": "Download PDF Report"
+  },
+  "macroPresets": {
+    "dietPreset": "Diet Preset",
+    "balanced": "Balanced",
+    "lowCarb": "Low Carb",
+    "keto": "Keto",
+    "highProtein": "High Protein"
+  },
+  "mealBreakdown": {
+    "title": "Daily Meal Plan",
+    "breakfast": "Breakfast",
+    "lunch": "Lunch",
+    "snack": "Snack",
+    "dinner": "Dinner"
+  },
+  "sampleMealPlan": {
+    "title": "Sample Meal Plan",
+    "regenerate": "Regenerate",
+    "scaledNote": "Portions scaled to ~{{calories}} kcal target. Actual values may vary."
+  },
+  "goalTips": {
+    "tipsFor": "Tips for {{goal}}",
+    "weightLoss": "Weight Loss",
+    "muscleBuilding": "Muscle Building",
+    "maintenanceGoal": "Maintenance",
+    "lose": [
+      "Aim for a 500 cal deficit — that's ~0.45 kg (1 lb) lost per week.",
+      "Prioritize protein to preserve muscle mass during your cut.",
+      "Eat slowly and drink water before meals to feel full sooner.",
+      "Track your intake for at least a week to build awareness.",
+      "Sleep 7–9 hours — poor sleep increases hunger hormones."
+    ],
+    "maintain": [
+      "You're fueling at maintenance — great for body recomposition.",
+      "Focus on whole foods for micronutrient density.",
+      "Strength train 3–4× per week to maintain lean mass.",
+      "Stay consistent — small daily habits beat occasional perfection.",
+      "Reassess every 4–6 weeks as your activity changes."
+    ],
+    "build": [
+      "A 500 cal surplus supports lean muscle gain of ~0.25 kg/week.",
+      "Hit your protein target every day — it's the #1 muscle-building factor.",
+      "Progressive overload in the gym drives growth, not just food.",
+      "Spread protein across 4 meals for optimal muscle protein synthesis.",
+      "Don't rush — gaining too fast leads to excess fat, not more muscle."
+    ]
+  },
+  "history": {
+    "title": "Calculation History",
+    "clear": "Clear"
+  },
+  "bodyFat": {
+    "pageTitle": "Body Fat Calculator",
+    "pageSubtitle": "Estimate your body fat percentage using the U.S. Navy Method.",
+    "title": "Body Fat % Calculator",
+    "navy": "U.S. Navy Method",
+    "neck": "Neck (cm)",
+    "waist": "Waist (cm)",
+    "hip": "Hip (cm)",
+    "estimate": "Estimate Body Fat %",
+    "result": "Estimated Body Fat",
+    "fillRequired": "Please fill in all required fields.",
+    "hipRequired": "Hip circumference is required for females.",
+    "essential": "Essential",
+    "athletic": "Athletic",
+    "fit": "Fit",
+    "average": "Average",
+    "aboveAverage": "Above average"
+  },
+  "waterTracker": {
+    "title": "Daily Water Tracker",
+    "reset": "Reset",
+    "goalReached": "🎉 Goal reached!"
+  },
+  "fastingTimer": {
+    "title": "Intermittent Fasting Timer",
+    "selectWindow": "Select fasting window",
+    "completed": "Completed!",
+    "remaining": "Remaining",
+    "elapsed": "Elapsed",
+    "fastingWindow": "fasting window",
+    "startFast": "Start Fast",
+    "endFast": "End Fast",
+    "started": "Started",
+    "ends": "Ends"
+  },
+  "portionCalc": {
+    "pageTitle": "Portion Macro Calculator",
+    "pageSubtitle": "Calculate exact macros for any food portion based on its nutritional label.",
+    "title": "Portion Macro Calculator",
+    "description": "Enter the nutritional info from any food label, then type your portion size to see exact macros.",
+    "baseWeight": "Base Weight (g)",
+    "calories": "Calories",
+    "protein": "Protein (g)",
+    "fats": "Fats (g)",
+    "carbs": "Carbs (g)",
+    "yourPortion": "Your Portion (g)"
+  },
+  "dailyTools": {
+    "pageTitle": "Daily Health Tools",
+    "pageSubtitle": "Track your hydration and manage intermittent fasting — all offline."
+  },
+  "mealPlanPage": {
+    "pageTitle": "Sample Meal Plan",
+    "pageSubtitle": "Get a dynamically generated daily menu tailored to your calorie target.",
+    "targetCalories": "Target Calories (kcal)"
+  },
+  "common": {
+    "kcal": "kcal",
+    "kg": "kg",
+    "lbs": "lbs"
+  }
+}

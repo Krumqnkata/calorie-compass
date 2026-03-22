@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Coffee, Sun, Sunset, Moon, RefreshCw } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   targetCalories: number;
@@ -68,27 +69,28 @@ function generatePlan() {
 }
 
 export function SampleMealPlan({ targetCalories }: Props) {
+  const { t } = useTranslation();
   const [plan, setPlan] = useState(generatePlan);
 
   const totalCal = plan.breakfast.cal + plan.lunch.cal + plan.dinner.cal + plan.snack.cal;
   const scale = targetCalories / totalCal;
 
   const meals = [
-    { key: "breakfast", label: "Breakfast", time: "7–9 AM", item: plan.breakfast },
-    { key: "lunch", label: "Lunch", time: "12–2 PM", item: plan.lunch },
-    { key: "snack", label: "Snack", time: "3–4 PM", item: plan.snack },
-    { key: "dinner", label: "Dinner", time: "6–8 PM", item: plan.dinner },
+    { key: "breakfast", labelKey: "mealBreakdown.breakfast", time: "7–9 AM", item: plan.breakfast },
+    { key: "lunch", labelKey: "mealBreakdown.lunch", time: "12–2 PM", item: plan.lunch },
+    { key: "snack", labelKey: "mealBreakdown.snack", time: "3–4 PM", item: plan.snack },
+    { key: "dinner", labelKey: "mealBreakdown.dinner", time: "6–8 PM", item: plan.dinner },
   ];
 
   return (
     <div className="rounded-2xl border bg-card p-6 sm:p-8 shadow-sm">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="text-sm font-medium text-muted-foreground">Sample Meal Plan</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">{t("sampleMealPlan.title")}</h3>
         <button
           onClick={() => setPlan(generatePlan())}
           className="flex items-center gap-1.5 text-xs font-medium text-primary hover:opacity-80 transition-opacity"
         >
-          <RefreshCw className="h-3.5 w-3.5" /> Regenerate
+          <RefreshCw className="h-3.5 w-3.5" /> {t("sampleMealPlan.regenerate")}
         </button>
       </div>
       <div className="space-y-3">
@@ -106,7 +108,7 @@ export function SampleMealPlan({ targetCalories }: Props) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-sm font-semibold text-foreground">{m.label}</span>
+                    <span className="text-sm font-semibold text-foreground">{t(m.labelKey)}</span>
                     <span className="text-[10px] text-muted-foreground">{m.time}</span>
                     <span className="ml-auto text-sm font-bold tabular-nums text-foreground">{cal} kcal</span>
                   </div>
@@ -123,7 +125,7 @@ export function SampleMealPlan({ targetCalories }: Props) {
         })}
       </div>
       <p className="text-[10px] text-muted-foreground text-center mt-4">
-        Portions scaled to ~{targetCalories.toLocaleString()} kcal target. Actual values may vary.
+        {t("sampleMealPlan.scaledNote", { calories: targetCalories.toLocaleString() })}
       </p>
     </div>
   );
