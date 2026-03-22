@@ -1,12 +1,7 @@
 import { useState, useRef } from "react";
 import { CalculatorForm } from "./CalculatorForm";
 import { CalculatorResults } from "./CalculatorResults";
-import { DarkModeToggle } from "./DarkModeToggle";
 import { ResultsHistory } from "./ResultsHistory";
-import { BodyFatCalculator } from "./BodyFatCalculator";
-import { WaterTracker } from "./WaterTracker";
-import { FastingTimer } from "./FastingTimer";
-import { PortionCalculator } from "./PortionCalculator";
 
 export type Gender = "male" | "female";
 export type Goal = "lose" | "maintain" | "build";
