@@ -1,12 +1,7 @@
 import { useState, useRef } from "react";
 import { CalculatorForm } from "./CalculatorForm";
 import { CalculatorResults } from "./CalculatorResults";
-import { DarkModeToggle } from "./DarkModeToggle";
 import { ResultsHistory } from "./ResultsHistory";
-import { BodyFatCalculator } from "./BodyFatCalculator";
-import { WaterTracker } from "./WaterTracker";
-import { FastingTimer } from "./FastingTimer";
-import { PortionCalculator } from "./PortionCalculator";
 
 export type Gender = "male" | "female";
 export type Goal = "lose" | "maintain" | "build";
@@ -126,7 +121,6 @@ export function CalorieCalculator() {
 
   return (
     <div className="min-h-screen py-8 px-4 sm:py-16">
-      <DarkModeToggle />
       <div className="max-w-2xl mx-auto">
         <header className="text-center mb-10">
           <div className="inline-flex items-center gap-2 rounded-full bg-emerald-light px-4 py-1.5 text-sm font-medium text-primary mb-4">
@@ -156,24 +150,6 @@ export function CalorieCalculator() {
             <ResultsHistory history={history} onClear={clearHistory} />
           </div>
         )}
-
-        {/* Health & Fitness Tools */}
-        <div className="mt-12 space-y-6">
-          <h2 className="text-lg font-semibold text-foreground text-center">Health & Fitness Tools</h2>
-
-          <BodyFatCalculator />
-
-          {results && (
-            <WaterTracker goalLiters={results.waterLiters} />
-          )}
-          {!results && (
-            <WaterTracker goalLiters={2.5} />
-          )}
-
-          <FastingTimer />
-
-          <PortionCalculator />
-        </div>
       </div>
     </div>
   );

@@ -3,8 +3,13 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import { Navbar } from "@/components/Navbar";
+import Index from "./pages/Index";
+import PortionCalculatorPage from "./pages/PortionCalculatorPage";
+import BodyFatPage from "./pages/BodyFatPage";
+import DailyToolsPage from "./pages/DailyToolsPage";
+import MealPlanPage from "./pages/MealPlanPage";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -14,9 +19,13 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/portion-calculator" element={<PortionCalculatorPage />} />
+          <Route path="/body-fat" element={<BodyFatPage />} />
+          <Route path="/daily-tools" element={<DailyToolsPage />} />
+          <Route path="/meal-plan" element={<MealPlanPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
