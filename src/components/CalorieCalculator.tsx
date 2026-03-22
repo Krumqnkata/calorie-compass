@@ -6,6 +6,7 @@ import { ResultsHistory } from "./ResultsHistory";
 import { BodyFatCalculator } from "./BodyFatCalculator";
 import { WaterTracker } from "./WaterTracker";
 import { FastingTimer } from "./FastingTimer";
+import { PortionCalculator } from "./PortionCalculator";
 
 export type Gender = "male" | "female";
 export type Goal = "lose" | "maintain" | "build";
