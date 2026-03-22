@@ -27,6 +27,11 @@
     "bodyFatOptional": "Body Fat %",
     "optional": "(optional)",
     "leanMass": "Lean mass ≈",
+    "optionalMeasurements": "Optional Measurements",
+    "chest": "Chest",
+    "neck": "Neck",
+    "waist": "Waist",
+    "hip": "Hip",
     "goal": "Goal",
     "loseWeight": "Lose Weight",
     "maintain": "Maintain",
@@ -72,7 +77,8 @@
     "balanced": "Balanced",
     "lowCarb": "Low Carb",
     "keto": "Keto",
-    "highProtein": "High Protein"
+    "highProtein": "High Protein",
+    "custom": "Custom"
   },
   "mealBreakdown": {
     "title": "Daily Meal Plan",
@@ -177,5 +183,35 @@
     "kcal": "kcal",
     "kg": "kg",
     "lbs": "lbs"
+  },
+  "oneRepMax": {
+    "title": "One Rep Max Calculator",
+    "subtitle": "Calculate your theoretical maximum lift based on your performance.",
+    "weightLifted": "Weight Lifted",
+    "repetitions": "Repetitions",
+    "estimated": "Estimated One Rep Max",
+    "averageFormula": "Average of Epley & Brzycki formulas",
+    "breakdown": "Percentage Breakdown",
+    "badge": "Strength Tools"
+  },
+  "zigzag": {
+    "title": "Calorie Cycling (ZigZag)",
+    "description": "Weekly calorie schedule to prevent metabolic adaptation and break plateaus. Low days are 5, High days are 2.",
+    "lowDay": "Low Day",
+    "highDay": "High Day"
+  },
+  "common": {
+    "kcal": "kcal",
+    "kg": "kg",
+    "lbs": "lbs",
+    "days": {
+      "Mon": "Mon",
+      "Tue": "Tue",
+      "Wed": "Wed",
+      "Thu": "Thu",
+      "Fri": "Fri",
+      "Sat": "Sat",
+      "Sun": "Sun"
+    }
   }
 }

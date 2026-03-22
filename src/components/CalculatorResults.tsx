@@ -7,6 +7,8 @@ import { AnimatedNumber } from "./AnimatedNumber";
 import { PdfExportButton } from "./PdfExportButton";
 import { MacroPresets, MacroSplit } from "./MacroPresets";
 import { SampleMealPlan } from "./SampleMealPlan";
+import { BMIGauge } from "./BMIGauge";
+import { ZigZagScheduler } from "./ZigZagScheduler";
 import { Droplets, Heart, Target, Scale, Dumbbell, TrendingDown, TrendingUp } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -87,8 +89,16 @@ export function CalculatorResults({ results }: Props) {
         <MetricCard icon={<Dumbbell className="h-4 w-4 text-primary" />} label={t("results.idealWeight")} value={`${results.idealWeightLow}–${results.idealWeightHigh}`} unit={t("common.kg")} />
       </div>
 
-      {/* BMI Visual Bar */}
-      <BmiBar bmi={results.bmi} />
+      {/* BMI Gauge */}
+      <div className="rounded-2xl border bg-card p-6 shadow-sm">
+        <h3 className="text-sm font-medium text-muted-foreground mb-4 text-center">{t("results.bmiScale")}</h3>
+        <BMIGauge bmi={results.bmi} />
+      </div>
+
+      {/* ZigZag Scheduler */}
+      {results.goal === "lose" && ( // Only show for losing weight goal
+        <ZigZagScheduler targetCalories={results.targetCalories} />
+      )}
 
       {/* Tips */}
       <GoalTips goal={results.goal} targetCalories={results.targetCalories} protein={macros.protein} />
@@ -126,42 +136,6 @@ function MetricCard({ icon, label, value, unit }: { icon: React.ReactNode; label
       </div>
       <p className="text-xl font-bold tabular-nums text-foreground">{value}</p>
       <p className="text-xs text-muted-foreground">{unit}</p>
-    </div>
-  );
-}
-
-function BmiBar({ bmi }: { bmi: number }) {
-  const { t } = useTranslation();
-  const position = Math.min(Math.max(((bmi - 15) / 25) * 100, 0), 100);
-  const segments = [
-    { label: t("results.underweight"), range: "< 18.5", width: "14%", color: "bg-sky" },
-    { label: t("results.normal"), range: "18.5–24.9", width: "26%", color: "bg-primary" },
-    { label: t("results.overweight"), range: "25–29.9", width: "20%", color: "bg-amber" },
-    { label: t("results.obese"), range: "30+", width: "40%", color: "bg-destructive" },
-  ];
-
-  return (
-    <div className="rounded-2xl border bg-card p-6 shadow-sm">
-      <div className="flex justify-between items-baseline mb-3">
-        <h3 className="text-sm font-medium text-muted-foreground">{t("results.bmiScale")}</h3>
-        <span className="text-sm font-bold tabular-nums text-foreground">{bmi}</span>
-      </div>
-      <div className="relative">
-        <div className="flex h-3 rounded-full overflow-hidden gap-0.5">
-          {segments.map((seg) => (
-            <div key={seg.label} className={`${seg.color} opacity-80`} style={{ width: seg.width }} />
-          ))}
-        </div>
-        <div
-          className="absolute top-0 w-3 h-3 rounded-full bg-foreground border-2 border-card shadow-md transition-all duration-700"
-          style={{ left: `calc(${position}% - 6px)` }}
-        />
-        <div className="flex justify-between mt-2">
-          {segments.map((seg) => (
-            <span key={seg.label} className="text-[10px] text-muted-foreground">{seg.label}</span>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

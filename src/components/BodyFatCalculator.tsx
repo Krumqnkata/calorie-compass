@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Ruler } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { calculateBodyFat } from "@/lib/calculations";
 
 export function BodyFatCalculator() {
   const { t } = useTranslation();
@@ -8,15 +9,17 @@ export function BodyFatCalculator() {
   const [neck, setNeck] = useState("");
   const [waist, setWaist] = useState("");
   const [hip, setHip] = useState("");
+  const [height, setHeight] = useState("");
   const [result, setResult] = useState<number | null>(null);
   const [error, setError] = useState("");
 
   const calculate = () => {
     const n = parseFloat(neck);
     const w = parseFloat(waist);
-    const h = parseFloat(hip);
+    const h = parseFloat(hip) || 0;
+    const ht = parseFloat(height);
 
-    if (!n || !w || n <= 0 || w <= 0) {
+    if (!n || !w || !ht || n <= 0 || w <= 0 || ht <= 0) {
       setError(t("bodyFat.fillRequired"));
       return;
     }
@@ -26,12 +29,7 @@ export function BodyFatCalculator() {
     }
     setError("");
 
-    let bf: number;
-    if (gender === "male") {
-      bf = 495 / (1.0324 - 0.19077 * Math.log10(w - n) + 0.15456 * Math.log10(170)) - 450;
-    } else {
-      bf = 495 / (1.29579 - 0.35004 * Math.log10(w + h - n) + 0.22100 * Math.log10(170)) - 450;
-    }
+    const bf = calculateBodyFat(gender, n, w, h, ht);
     setResult(Math.round(bf * 10) / 10);
   };
 
@@ -74,7 +72,7 @@ export function BodyFatCalculator() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         <div>
           <label className="block text-sm font-medium text-muted-foreground mb-1.5">{t("bodyFat.neck")}</label>
           <input type="number" placeholder="38" value={neck} onChange={(e) => setNeck(e.target.value)} className={inputClass} />
@@ -82,6 +80,10 @@ export function BodyFatCalculator() {
         <div>
           <label className="block text-sm font-medium text-muted-foreground mb-1.5">{t("bodyFat.waist")}</label>
           <input type="number" placeholder="85" value={waist} onChange={(e) => setWaist(e.target.value)} className={inputClass} />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-muted-foreground mb-1.5">{t("form.height")} (cm)</label>
+          <input type="number" placeholder="175" value={height} onChange={(e) => setHeight(e.target.value)} className={inputClass} />
         </div>
         {gender === "female" && (
           <div>

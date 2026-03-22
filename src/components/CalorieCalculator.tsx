@@ -3,9 +3,21 @@ import { CalculatorForm } from "./CalculatorForm";
 import { CalculatorResults } from "./CalculatorResults";
 import { ResultsHistory } from "./ResultsHistory";
 import { useTranslation } from "react-i18next";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+import {
+  calculateBMR,
+  calculateTDEE,
+  calculateTargetCalories,
+  calculateBMI,
+  calculateMacros,
+  calculateWaterIntake,
+  calculateIdealWeightRange,
+  convertImperialToMetric,
+  Gender,
+  Goal,
+} from "@/lib/calculations";
 
-export type Gender = "male" | "female";
-export type Goal = "lose" | "maintain" | "build";
+export type { Gender, Goal };
 export type ActivityLevel = "1.2" | "1.375" | "1.55" | "1.725" | "1.9";
 export type UnitSystem = "metric" | "imperial";
 
@@ -20,6 +32,11 @@ export interface FormData {
   activityLevel: ActivityLevel;
   unitSystem: UnitSystem;
   bodyFatPercent: string;
+  // New measurement fields (optional)
+  neck: string;
+  waist: string;
+  hip: string;
+  chest: string;
 }
 
 export interface Results {
@@ -36,24 +53,17 @@ export interface Results {
   idealWeightLow: number;
   idealWeightHigh: number;
   timestamp: number;
-}
-
-function loadHistory(): Results[] {
-  try {
-    return JSON.parse(localStorage.getItem("calorie-history") || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function saveHistory(history: Results[]) {
-  localStorage.setItem("calorie-history", JSON.stringify(history));
+  // New measurement fields saved in history
+  neck?: number;
+  waist?: number;
+  hip?: number;
+  chest?: number;
 }
 
 export function CalorieCalculator() {
   const [results, setResults] = useState<Results | null>(null);
   const [showResults, setShowResults] = useState(false);
-  const [history, setHistory] = useState<Results[]>(loadHistory);
+  const [history, setHistory] = useLocalStorage<Results[]>("calorie-history", []);
   const resultsRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
@@ -64,44 +74,41 @@ export function CalorieCalculator() {
     const multiplier = parseFloat(data.activityLevel);
 
     if (data.unitSystem === "imperial") {
-      weightKg = weightKg * 0.453592;
-      const feet = parseFloat(data.heightFeet) || 0;
-      const inches = parseFloat(data.heightInches) || 0;
-      heightCm = (feet * 12 + inches) * 2.54;
+      const metric = convertImperialToMetric(
+        weightKg,
+        parseFloat(data.heightFeet) || 0,
+        parseFloat(data.heightInches) || 0
+      );
+      weightKg = metric.weightKg;
+      heightCm = metric.heightCm;
     }
 
-    const bmr =
-      data.gender === "male"
-        ? 10 * weightKg + 6.25 * heightCm - 5 * age + 5
-        : 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
-
-    const tdee = bmr * multiplier;
-    const targetCalories =
-      data.goal === "lose" ? tdee - 500 : data.goal === "build" ? tdee + 500 : tdee;
-
-    const bmi = weightKg / ((heightCm / 100) ** 2);
-    const protein = (targetCalories * 0.3) / 4;
-    const fat = (targetCalories * 0.3) / 9;
-    const carbs = (targetCalories * 0.4) / 4;
-    const waterLiters = Math.round((weightKg * 35) / 100) / 10;
-    const heightM = heightCm / 100;
-    const idealWeightLow = Math.round(18.5 * heightM * heightM);
-    const idealWeightHigh = Math.round(24.9 * heightM * heightM);
+    const bmr = calculateBMR(data.gender, weightKg, heightCm, age);
+    const tdee = calculateTDEE(bmr, multiplier);
+    const targetCalories = calculateTargetCalories(tdee, data.goal);
+    const bmi = calculateBMI(weightKg, heightCm);
+    const macros = calculateMacros(targetCalories);
+    const waterLiters = calculateWaterIntake(weightKg);
+    const idealWeight = calculateIdealWeightRange(heightCm);
 
     const newResults: Results = {
       bmr: Math.round(bmr),
       tdee: Math.round(tdee),
       targetCalories: Math.round(targetCalories),
       bmi: Math.round(bmi * 10) / 10,
-      protein: Math.round(protein),
-      fat: Math.round(fat),
-      carbs: Math.round(carbs),
+      protein: Math.round(macros.protein),
+      fat: Math.round(macros.fat),
+      carbs: Math.round(macros.carbs),
       waterLiters,
       goal: data.goal,
       weightKg: Math.round(weightKg * 10) / 10,
-      idealWeightLow,
-      idealWeightHigh,
+      idealWeightLow: idealWeight.min,
+      idealWeightHigh: idealWeight.max,
       timestamp: Date.now(),
+      neck: parseFloat(data.neck) || undefined,
+      waist: parseFloat(data.waist) || undefined,
+      hip: parseFloat(data.hip) || undefined,
+      chest: parseFloat(data.chest) || undefined,
     };
 
     setResults(newResults);
@@ -109,7 +116,6 @@ export function CalorieCalculator() {
 
     const newHistory = [newResults, ...history].slice(0, 10);
     setHistory(newHistory);
-    saveHistory(newHistory);
 
     setTimeout(() => {
       resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -118,7 +124,17 @@ export function CalorieCalculator() {
 
   const clearHistory = () => {
     setHistory([]);
-    localStorage.removeItem("calorie-history");
+  };
+
+  const importHistory = (imported: Results[]) => {
+    // Merge or replace? Let's prepend and dedup by timestamp
+    const existingTimestamps = new Set(history.map(h => h.timestamp));
+    const newItems = imported.filter(i => !existingTimestamps.has(i.timestamp));
+    
+    if (newItems.length === 0) return;
+
+    const merged = [...newItems, ...history].sort((a, b) => b.timestamp - a.timestamp).slice(0, 50); // Keep last 50
+    setHistory(merged);
   };
 
   return (
@@ -147,9 +163,9 @@ export function CalorieCalculator() {
           </div>
         )}
 
-        {history.length > 1 && (
+        {history.length > 0 && (
           <div className="mt-8 opacity-0 animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-            <ResultsHistory history={history} onClear={clearHistory} />
+            <ResultsHistory history={history} onClear={clearHistory} onImport={importHistory} />
           </div>
         )}
       </div>

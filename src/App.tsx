@@ -9,6 +9,7 @@ import PortionCalculatorPage from "./pages/PortionCalculatorPage";
 import BodyFatPage from "./pages/BodyFatPage";
 import DailyToolsPage from "./pages/DailyToolsPage";
 import MealPlanPage from "./pages/MealPlanPage";
+import { OneRepMaxPage } from "./pages/OneRepMaxPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/body-fat" element={<BodyFatPage />} />
           <Route path="/daily-tools" element={<DailyToolsPage />} />
           <Route path="/meal-plan" element={<MealPlanPage />} />
+          <Route path="/one-rep-max" element={<OneRepMaxPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

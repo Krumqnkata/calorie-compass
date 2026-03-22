@@ -112,3 +112,37 @@
     text-wrap: balance;
   }
 }
+
+@media print {
+  /* Hide elements not needed for print */
+  .sticky.top-0 { /* Navbar */
+    display: none !important;
+  }
+  .no-print { /* General class for elements to hide */
+    display: none !important;
+  }
+
+  /* Adjust layout for print */
+  body {
+    background-color: #fff !important;
+    color: #000 !important;
+    -webkit-print-color-adjust: exact; /* For background colors */
+    print-color-adjust: exact;
+  }
+
+  /* Ensure text is black and readable */
+  .text-foreground, .text-muted-foreground, .font-semibold, .font-medium, .font-bold {
+    color: #000 !important;
+  }
+
+  /* Remove box shadows and borders from cards to save ink */
+  .rounded-2xl.border, .rounded-xl.border {
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Adjust spacing */
+  .space-y-6 > *:last-child, .space-y-4 > *:last-child {
+    margin-bottom: 0 !important;
+  }
+}

@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Timer, Play, Square } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 
 const FASTING_WINDOWS = [
   { label: "12:12", hours: 12 },
@@ -15,23 +16,9 @@ interface FastState {
   durationHours: number;
 }
 
-function loadState(): FastState {
-  try {
-    const raw = localStorage.getItem("fasting-timer");
-    if (!raw) return { startTime: null, durationHours: 16 };
-    return JSON.parse(raw);
-  } catch {
-    return { startTime: null, durationHours: 16 };
-  }
-}
-
-function saveState(state: FastState) {
-  localStorage.setItem("fasting-timer", JSON.stringify(state));
-}
-
 export function FastingTimer() {
   const { t } = useTranslation();
-  const [state, setState] = useState<FastState>(loadState);
+  const [state, setState] = useLocalStorage<FastState>("fasting-timer", { startTime: null, durationHours: 16 });
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
@@ -40,14 +27,9 @@ export function FastingTimer() {
     return () => clearInterval(id);
   }, [state.startTime]);
 
-  const update = useCallback((s: FastState) => {
-    setState(s);
-    saveState(s);
-  }, []);
-
-  const startFast = () => { update({ ...state, startTime: Date.now() }); setNow(Date.now()); };
-  const stopFast = () => update({ ...state, startTime: null });
-  const setWindow = (h: number) => update({ ...state, durationHours: h, startTime: null });
+  const startFast = () => { setState({ ...state, startTime: Date.now() }); setNow(Date.now()); };
+  const stopFast = () => setState({ ...state, startTime: null });
+  const setWindow = (h: number) => setState({ ...state, durationHours: h, startTime: null });
 
   const totalMs = state.durationHours * 3600 * 1000;
   const elapsedMs = state.startTime ? Math.max(0, now - state.startTime) : 0;
